@@ -6,10 +6,6 @@
     <title> Welcome!</title> 
 </head>
 <body>
-    <div id="sign">
-        <h1><p>Sign Up</p></h1>
-    </div>
-
      <!-- <div id="input">
         <form class="form" action="chat/chat.html">
          <div id="name"> Username:  <input type="text" name="Username" value=""> <br> </div> 
@@ -19,21 +15,26 @@
      </div> -->
 
      <div class="container">
-            <form action="chat/chat.html">
+            <div class="row">
+                    <div class="col-25">
+                      <label for="welcome"><h1>Enter the rooms to chat!</h1> </label>
+                    </div>
+            </div>
+            <form action="chat.html">
               <div class="row">
                 <div class="col-25">
                   <label for="fname">Name</label>
                 </div>
                 <div class="col-75">
-                  <input type="text" id="fname" name="firstname" placeholder="Your name..">
+                  <input type="text" id="fname" name="name" placeholder="Your name..">
                 </div>
               </div>
               <div class="row">
                 <div class="col-25">
-                  <label for="country">Room</label>
+                  <label for="room">Room</label>
                 </div>
                 <div class="col-75">
-                  <select id="country" name="country">
+                  <select id="room" name="room">
                     <option value="GOT">GOT</option>
                     <option value="GAMER">GAMER</option>
                     <option value="THOR">THOR</option>
@@ -48,7 +49,7 @@
           
 
     <script src="/socket.io/socket.io.js"></script> 
-    <script src="/js/index.js"></script>
+    <script src="/js/chat.js"></script>
     <script src="/js/libs/mustache.js"></script>
 </body>
 </html>

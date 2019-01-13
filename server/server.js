@@ -6,7 +6,14 @@ const mongoose = require('mongoose');
 const connect = require('./db/db-connect');
 var {User,Chat} = require('./db/user-shema');
 
+
+const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString} = require('./utils/validation');
+const {Users} = require('./utils/users');
+
 var publicPath = path.join(__dirname,'../public');
+
+var users = new Users();
 
 //console.log(publicPath);
 var port = process.env.PORT || 3000;
@@ -60,6 +67,31 @@ io.on('connection',(socket)=>{
     //     text: 'what are you doin',
     //     from: 'rahul'
     // })
+    socket.on('join', (params, callback) => {
+        if (!isRealString(params.name) || !isRealString(params.room)) {
+          return callback('Name and room name are required.');
+        }
+    
+        socket.join(params.room);
+        users.removeUser(socket.id);
+        users.addUser(socket.id, params.name, params.room);
+    
+        io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+        socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`));
+        callback();
+      });
+    
+      socket.on('createMessage', (message, callback) => {
+        var user = users.getUser(socket.id);
+         console.log('message created: ',message);
+        if (user && isRealString(message.text)) {
+          io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+        }
+    
+        callback();
+      });
+    
 
     socket.on('newMessage',(message)=>{
         console.log('messageReceived ',message);
@@ -68,7 +100,7 @@ io.on('connection',(socket)=>{
             from: message.from,
             text: message.text
         })
-    })
+    });
     
 
 });
