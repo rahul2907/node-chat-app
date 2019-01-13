@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./../css/styles.css">
+    <script src="./../js/libs/jquery-3.3.1.min.js"></script>
+    <title> Welcome!</title> 
+</head>
+<body>
+     
+     <ol id="messages"> </ol>
+
+     <div class="container">
+            <form id="messages__chat">
+              <div class="row">
+                <div class="col-75">
+                  <textarea id="subject" name="textbox" placeholder="Write something.." style="height:100px"></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <input type="submit" value="Submit">
+              </div>
+            </form>
+          </div>
+
+     <script id="message-template" type="text/template">
+       <h1><p>{{from}}</p></h1>
+       <p>{{text}}</p>
+     </script>
+
+    <script src="/socket.io/socket.io.js"></script> 
+    <script src="/js/index.js"></script>
+    <script src="/js/libs/mustache.js"></script>
+</body>
+</html>

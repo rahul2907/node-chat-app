@@ -1,8 +1,54 @@
 <!DOCTYPE html>
 <head>
-    <title> Welcome!</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./css/styles.css">
+    <script src="./js/libs/jquery-3.3.1.min.js"></script>
+    <title> Welcome!</title> 
 </head>
 <body>
-    <h1><p>hello rahul</p></h1>
+    <div id="sign">
+        <h1><p>Sign Up</p></h1>
+    </div>
+
+     <!-- <div id="input">
+        <form class="form" action="chat/chat.html">
+         <div id="name"> Username:  <input type="text" name="Username" value=""> <br> </div> 
+         <div id="room"> Room:  <input type="text" name="Room" value=""> <br> </div> 
+         <div id="submit"> <input type="submit" value="Submit"> </div>
+        </form>
+     </div> -->
+
+     <div class="container">
+            <form action="chat/chat.html">
+              <div class="row">
+                <div class="col-25">
+                  <label for="fname">Name</label>
+                </div>
+                <div class="col-75">
+                  <input type="text" id="fname" name="firstname" placeholder="Your name..">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-25">
+                  <label for="country">Room</label>
+                </div>
+                <div class="col-75">
+                  <select id="country" name="country">
+                    <option value="GOT">GOT</option>
+                    <option value="GAMER">GAMER</option>
+                    <option value="THOR">THOR</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <input type="submit" value="Submit">
+              </div>
+            </form>
+          </div>
+          
+
+    <script src="/socket.io/socket.io.js"></script> 
+    <script src="/js/index.js"></script>
+    <script src="/js/libs/mustache.js"></script>
 </body>
 </html>
