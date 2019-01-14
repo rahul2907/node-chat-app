@@ -47,10 +47,6 @@ app.get('/about', (req, res) => {
 io.on('connection',(socket)=>{
     console.log('new user connected');
 
-    socket.on('disconnect', ()=>{
-        console.log('user disconnected');
-    });
- 
     // var chat = mongoose.model('Input', Chat);
     
     // socket.on('getInputs', (input) =>{
@@ -92,6 +88,22 @@ io.on('connection',(socket)=>{
         callback();
       });
     
+      socket.on('createLocationMessage', (coords) => {
+        var user = users.getUser(socket.id);
+    
+        if (user) {
+          io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));  
+        }
+      });
+    
+      socket.on('disconnect', () => {
+        var user = users.removeUser(socket.id);
+    
+        if (user) {
+          io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+          io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
+        }
+      });
 
     socket.on('newMessage',(message)=>{
         console.log('messageReceived ',message);
