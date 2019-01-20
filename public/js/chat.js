@@ -18,6 +18,11 @@ function scrollToBottom () {
 
 socket.on('connect', function () {
   var params = jQuery.deparam(window.location.search);
+  socket.emit('connection',params, function (err){
+    if (err) {
+      console.log('error occured ');
+    } 
+  });
 
   socket.emit('join', params, function (err) {
     if (err) {
@@ -27,6 +32,19 @@ socket.on('connect', function () {
       console.log('No error');
     }
   });
+
+  socket.on('oldMessage', function (message) {
+    var template = jQuery('#message-template').html();
+    var html = Mustache.render(template, {
+      text: message.text,
+      from: message.name,
+      createdAt: message.createdAt
+    });
+  
+    jQuery('#messages').append(html);
+    scrollToBottom();
+  });
+  
 });
 
 socket.on('disconnect', function () {
@@ -42,6 +60,7 @@ socket.on('updateUserList', function (users) {
 
   jQuery('#users').html(ol);
 });
+
 
 socket.on('newMessage', function (message) {
   var formattedTime = moment(message.createdAt).format('h:mm a');

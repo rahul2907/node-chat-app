@@ -12,7 +12,15 @@ var Chat = new schema({
     room: String,
 });
 
+var Message = new schema({
+    name: String,
+    room: String,
+    text: String,
+    createdAt: Number
+})
+
 module.exports = {
     User: User,
-    Chat: Chat
+    Chat: Chat,
+    Message: Message
 }

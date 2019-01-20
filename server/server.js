@@ -4,7 +4,10 @@ const socketIO = require('socket.io');
 const http = require('http');
 const mongoose = require('mongoose');
 const connect = require('./db/db-connect');
-var {User,Chat} = require('./db/user-shema');
+//const deparam = require('./../public/js/libs/deparam');
+//const jQuery = require('./../public/js/libs/jquery-3.3.1.min.js');
+
+var {User,Chat,Message} = require('./db/user-shema');
 
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
@@ -63,6 +66,12 @@ io.on('connection',(socket)=>{
     //     text: 'what are you doin',
     //     from: 'rahul'
     // })
+  
+      
+  
+  
+  
+
     socket.on('join', (params, callback) => {
         if (!isRealString(params.name) || !isRealString(params.room)) {
           return callback('Name and room name are required.');
@@ -73,7 +82,31 @@ io.on('connection',(socket)=>{
         users.addUser(socket.id, params.name, params.room);
     
         io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+
+        var msg = mongoose.model('Message', Message);
+        
+        msg.find({room:params.room}, function (err, docs) {
+            if(err){
+              console.log('error occured in returning data');
+            }else{
+              console.log('msg: ',docs);
+   
+              var data;
+              for(var i = 0; i < docs.length; i++){
+                data = { name: docs[i].name,
+                  room:  docs[i].room,
+                  text:  docs[i].text,
+                  createdAt:  docs[i].createdAt
+                }
+                console.log('data', data);
+                io.sockets.connected[socket.id].emit('oldMessage', data);
+              }
+            }
+            
+        });
+        
         socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+
         socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`));
         callback();
       });
@@ -82,6 +115,23 @@ io.on('connection',(socket)=>{
         var user = users.getUser(socket.id);
          console.log('message created: ',message);
         if (user && isRealString(message.text)) {
+
+              var msg = mongoose.model('Message', Message);
+              var obj = {
+                name: user.name,
+                room: user.room,
+                text: message.text,
+                createdAt: new Date().getTime()
+              }
+        
+              var newInput = new msg(obj);
+              newInput.save( (err,tempInput)=>{
+              if(err){
+                return console.log('cannot insert the values', err);
+               }
+               console.log('Recored inserted: ',tempInput);
+           })
+  
           io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
         }
     
