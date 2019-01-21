@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/chatdata', (err)=>{
+var url = 'mongodb://localhost:27017/chatdata' || process.env.MONGOLAB_URI;
+mongoose.connect(url, (err)=>{
     if(err){
         return console.log('cannnot connect to db: ',err);
     }
